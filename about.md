@@ -4,6 +4,8 @@ title: About
 permalink: /about/
 ---
 
+Hey, I am Shay.
+
 Deepen understanding of new concepts with writing? let's try.
 
 * This site is statically deployed on [GitHub Pages](https://pages.github.com/), and is running using 
