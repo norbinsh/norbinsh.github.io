@@ -66,7 +66,7 @@ async def orchestrator():
 ```
 
 We are using the `create_task()` to wrap the coroutine into a task and schedule execution, then - we await on each of 
-the tasks to finish while 
+the tasks to finish.
 
 # Results
 ```
