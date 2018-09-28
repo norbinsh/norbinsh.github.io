@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Asynchronous Python Part 1"
+title:  "Asynchronous Python Part 2"
 date:   2018-09-28 22:07:55 +0300
 categories: Python
 ---
@@ -22,93 +22,61 @@ We will see the completion of the following actions (as one):
 * Repeat the process 50 times
 
 
-## Test #1 - Synchronous
+## Test #2 - Asynchronous
 
-Gist [here](https://gist.github.com/Norbinsh/47c8ec36ea48648cf8bee3c56e3cad16)
+Gist [here](https://gist.github.com/Norbinsh/02c398e9e1d6d0ce1a9031aefc0e6050)
 
-We are breaking down (almost) every action into a function, to keep it clean & simple.
+### So what did we change?
 
-Let's start from the end, and see what our main function is calling:
+* Got rid of `'requests'` in favour of  `'aiohttp'` which is async supported out of the box.
+* Hello coroutines! Started using asyncio APIs (async / await) where possible 
+
+Remember that in general there are 3 types of awaitables in general - coroutines, tasks, and futures.
+
 
 ```
-@timeit
-def main() -> None:
+loop = asyncio.get_event_loop()
+```
+
+Here we create the event loop - this is where the tasks runs coroutines.
+
+
+```
+loop.run_until_complete(orchestrator())
+```
+
+When a task awaits completion, the event loop knows that and schedule to run other stuff in the meanwhile.
+Notice that we created a special function `"orchestrator()"` (below) that will actually create the tasks - we then run
+it until completion.
+
+```
+async def orchestrator():
+
     url = 'https://www.google.com/robots.txt'
     ifile = "robots.html"
-    for i in range(1, 50 + 1):
-        print(f"Iteration number {i}")
-        raw_data = retrieve_url(url)
-        html_data = html_that(raw_data)
-        io_save(ifile, html_data)
-        clean_up(ifile)
-```
-\* @timeit is a decorator that will measure how long it took our calling method (main()) to finish execution.
-1. `retrieve_url()` will return a response object of the HTML request
-```
-def retrieve_url(url: str) -> requests.models.Response:
-    print(f"Retrieving URL: {url}")
-    response = requests.get(url, timeout=5)
-    response.raise_for_status()
-    return response
+
+    tasks = []
+    for _ in range(1, 50 + 1):
+        tasks.append(asyncio.create_task(retrieve_url(url)))
+    for task in tasks:
+        resp = await task
+        html_content = await html_that(resp)
+        await io_save(ifile, html_content)
+        await clean_up(ifile)
 ```
 
-2. `html_that()` will wrap the returned text with \<html\> tags
-```
-def html_that(response: requests.models.Response) -> str:
-    print(f"Wrapping with <html>")
-    html_content = f"""
-    <html>
-        <head>
-            <title>
-                Blocking can be bad for you.
-            </title>
-        </head>
-        <body>
-            <h1>
-                Blocking can be bad for you.
-            </h1>
-            <p>
-                {response.text}
-            </p>
-        </body>
-    </html>
-    """
-    return html_content
-```
-3. `io_save()` will open a file in write mode, and then write the contents of the html into it
-```
-def io_save(input_file: str, html_page: str) -> None:
-    print(f"Opening file: {input_file}")
-    with open(input_file, "w") as write_file:
-        write_file.write(html_page)
-```
-4. `clean_up()` as the name may suggest, will delete the file we create in each iteration
-```
-def clean_up(input_file: str) -> None:
-    if os.path.exists(input_file):
-        print(f"Deleting file: {input_file}")
-        os.remove(input_file)
-    else:
-        print(f"Did not find file: {input_file}")
-```
+We are using the `create_task()` to wrap the coroutine into a task and schedule execution, then - we await on each of 
+the tasks to finish while 
 
 # Results
 ```
 ...
-Iteration number 49
-Retrieving URL: https://www.google.com/robots.txt
+Deleting file: robots.html
 Wrapping with <html>
 Opening file: robots.html
 Deleting file: robots.html
-Iteration number 50
-Retrieving URL: https://www.google.com/robots.txt
-Wrapping with <html>
-Opening file: robots.html
-Deleting file: robots.html
-'main'  finished in 16.95s
+'main'  finished in 0.53s
 ```
+*0.53* seconds! that's 32 times faster with the cost of very minor added complexity.
 
-As you can see, running this module with 50 iterations, completed without any asynchronous code in 16.95 seconds.
-
-In the next post we will see the differences using asynchronous code where ever we can while trying to keep the code
-as close to the original as possible.
+In the next post we will try to spice things up using threads and process pool executors, in addition to asyncio.
