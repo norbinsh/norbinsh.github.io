@@ -1,19 +1,14 @@
 ---
 layout: post
 title:  "Asynchronous Python Part 1"
-date:   2018-09-28 18:56:12 +0300
+date:   2018-09-28 22:07:55 +0300
 categories: Python
 ---
 
-I've taken the timeit method from [this](https://medium.com/pythonhive/python-decorator-to-measure-the-execution-time-of-methods-fa04cb6bb36d) post.
+Second post in this series. as mentioned, our use case will be the same across the different tests:
 
-In this short series I will test **Asynchronous** (or parallel) programming in Python and measure the performance
-boost it provides with a given use case.
-
-Our use case will be the same across the different tests:
-
-* Synchronous (The test covered in this post)
-* Asynchronous (using asyncio and other supporting async libraries as needed)
+* Synchronous ([Part 1](https://norbinsh.github.io/python/2018/09/28/asynchronous-python-part-1.html))
+* Asynchronous - using asyncio and other supporting async libraries as needed (The test covered in this post) 
 * Async with a mix of threads & process pools
 
 #### What is being tested?
