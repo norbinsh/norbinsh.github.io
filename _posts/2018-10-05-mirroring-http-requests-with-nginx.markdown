@@ -99,7 +99,7 @@ to the destination and the response back to the client, poorly illustrated below
     }
     ```
     
-    ![Modified Flow](/assets/simple_flow_1.jpg)
+    ![Modified Flow](/assets/full_flow_2.jpg)
     
     Now, will it work? yes. Should you apply this it on production? See answer #3 below.
     
