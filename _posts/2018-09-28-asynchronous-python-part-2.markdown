@@ -9,7 +9,7 @@ Second post in this series. as mentioned, our use case will be the same across t
 
 * Synchronous ([Part 1](https://norbinsh.github.io/python/2018/09/28/asynchronous-python-part-1.html))
 * Asynchronous - using asyncio and other supporting async libraries as needed (The test covered in this post) 
-* Async with a mix of threads & process pools
+* Comparison with go-lang's 'goroutines' / 'channels'
 
 #### What is being tested?
 ###### Note: Things may seem complicated for no good reason - It's on purpose to better see the performance differentiation.

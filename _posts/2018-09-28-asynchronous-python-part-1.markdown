@@ -14,7 +14,7 @@ Our use case will be the same across the different tests:
 
 * Synchronous (The test covered in this post)
 * Asynchronous (using asyncio and other supporting async libraries as needed)
-* Async with a mix of threads & process pools
+* Comparison with go-lang's 'goroutines' / 'channels'
 
 #### What is being tested?
 ###### Note: Things may seem complicated for no good reason - It's on purpose to better see the performance differentiation.
