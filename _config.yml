@@ -9,6 +9,6 @@ github_username:  norbinsh
 
 
 markdown: kramdown
-theme: jekyll-theme-cayman
+theme: jekyll-theme-modernist
 plugins:
   - jekyll-feed
